@@ -1,4 +1,9 @@
-\documentclass[RNAAS]{aastex63}
+% Note:
+% - Could expand scope, fit the solar position above the midplane, orientation
+%   of the plane, title "The Sun's Position and Velocity in the Galaxy"
+% - Have to cite cosmohub...
+
+\documentclass[RNAAS]{aastex631}
 
 % Load common packages
 % \usepackage{microtype}  % ALWAYS!
@@ -12,12 +17,14 @@
 \graphicspath{{figures/}}
 \input{preamble.tex}
 
+\newcommand{\sgrA}{\ensuremath{\textrm{Sgr}~\textrm{A}^{*}}}
+
 \shorttitle{The Solar Velocity as of 2022}
 \shortauthors{Price-Whelan \& Drimmel}
 
 \begin{document}
 
-\title{The Solar Velocity: An update}
+\title{The Solar Velocity in the Galaxy: An update}
 
 \author[0000-0003-0872-7098]{Adrian~M.~Price-Whelan}
 \affiliation{Center for Computational Astrophysics, Flatiron Institute,
@@ -25,17 +32,61 @@
 \email{aprice-whelan@flatironinstitute.org}
 \correspondingauthor{Adrian M. Price-Whelan}
 
-\author[0000-0002-1777-5502]{Ronald~Drimmel}
-\affiliation{Osservatorio Astrofisico di Torino—INAF, Pino Torinese, Italy}
+% \author[0000-0002-1777-5502]{Ronald~Drimmel}
+% \affiliation{Osservatorio Astrofisico di Torino—INAF, Pino Torinese, Italy}
 
 
 \begin{abstract}\noindent
 Sup
 \end{abstract}
 
-\section{} \label{sec:intro}
+\section{Introduction} \label{sec:intro}
 
-Stuff.
+The (vector) position and velocity of the Sun within the Milky Way are
+fundamental quantities used in many Galactic dynamics and Galactic astronomy
+contexts.
+For example, it is used to convert the observed, Heliocentric positions and
+velocities of stars measured by the \gaia\ mission into Galactocentric
+coordinates that are used to study the structure of the Galaxy
+\cite[e.g.,][]{todo}, the kinematics of stars, clusters, and satellite galaxies
+\cite[e.g.,][]{todo}, and as an initial step in computing Galactic orbits of
+these objects \citep[e.g.,][]{}.
+The solar position and velocity are also used to interpret observations of the
+gas content of the Galaxy \citep{todo}, \todo{... other use cases or is this
+TMI?}.
+
+Historically, the solar velocity has often been expressed as the sum of two
+components: (1) the velocity of the ``local standard of rest'' (LSR), which is
+the velocity of a fictitious object on a circular orbit at the Sun's position,
+and (2) the solar ``peculiar velocity,'' which is the velocity of the Sun
+relative to the LSR.
+This separation made sense because, again historically, the solar peculiar
+velocity could be measured more precisely than the total velocity of the Sun due
+to large uncertainties on the distance from the Sun to the Galactic center
+$D_\odot$.
+
+More recently, the interferometric \acronym{GRAVITY} instrument has enabled
+incredibly precise measurements of the Sun--Galactic center distance $D_\odot$
+through detailed modeling of the orbits of stars in the gravitational sphere of
+influence of \sgrA\ (e.g., ``S2'').
+As pointed out in \citet{Drimmel:2018}, these direct distance measurements mean
+that it is now possible to obtain very precise estimates of the \emph{total}
+solar velocity without having to distinguish between the LSR and peculiar
+velocity of the sun.
+In this \textit{Note}, we use the most recent (and most precise)
+\acronym{GRAVITY} measurements of the distance to, and velocity of, \sgrA to
+provide an updated value of the solar velocity with respect to the Galactic
+center.
+
+
+\section{The Solar Velocity} \label{sec:vel}
+
+As is standard, we assume that \sgrA\ sits (at rest) at the Galactic center such
+that the distance to \sgrA\ is equivalent to the distance to the Galactic
+center, and such that the proper motion and radial velocity of \sgrA\ in a solar
+system barycentric reference frame can be inverted to measure the velocity of
+the Sun with respect to the Galactic center.
+
 
 
 \bibliographystyle{aasjournal}
