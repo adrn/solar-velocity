@@ -75,7 +75,7 @@ def get_ln_Veff(ln_density_args, gal_args, min_abs_b, max_dist, n_simpson_grid=2
     return log_Veff
 
 
-def ln_likelihood(p, xyz, sgrA_star, plot=False):
+def ln_likelihood(p, xyz, sgrA_star, ln_density_args, min_abs_b, max_dist, plot=False):
     lnn0, lnh1, lnh2, f, zsun, roll = p
     
     gal_args = (sgrA_star, zsun * u.pc, roll * u.rad)
@@ -84,6 +84,7 @@ def ln_likelihood(p, xyz, sgrA_star, plot=False):
     z_args = (np.exp(lnh1), np.exp(lnh2), f)
     
     if plot:
+        import matplotlib.pyplot as plt
         grid = np.linspace(-5000, 5000, 128)
         plt.hist(rot_xyz[2], bins=grid, density=True);
 
@@ -96,7 +97,7 @@ def ln_likelihood(p, xyz, sgrA_star, plot=False):
         ln_density_args[2], ln_density_args[3], # TODO: could swap out for params?
         ln_density_args[4], z_args
     )
-    ln_Veff = get_ln_Veff(args, gal_args, min_b, max_dist)
+    ln_Veff = get_ln_Veff(args, gal_args, min_abs_b, max_dist)
     
     return (
         - np.exp(lnn0 + ln_Veff) + 
