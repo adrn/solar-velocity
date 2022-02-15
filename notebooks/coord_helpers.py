@@ -2,6 +2,7 @@ from astropy.coordinates.matrix_utilities import (
     rotation_matrix,
     matrix_product
 )
+import numpy as np
 
 
 def get_M(sgrA_star, zsun, roll):
