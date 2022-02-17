@@ -17,6 +17,9 @@ def ln_two_sech2(z, h1, h2, f):
     lnterm2 = np.log(1 - f) - 2 * np.log(np.cosh(z / (2 * h2))) - np.log(4 * h2)
     return np.logaddexp(lnterm1, lnterm2)
 
+def ln_exp(x, x0, h):
+    return - (x-x0) / h - np.log(h)
+
 
 def ln_density(
     xyz, 
