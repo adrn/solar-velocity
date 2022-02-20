@@ -8,3 +8,6 @@ dependencies:
   - python=3.9
   - pip:
       - matplotlib>=3.3.3
+      - jupyter
+      - notebook
+      - jupytext
