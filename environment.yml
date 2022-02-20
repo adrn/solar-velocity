@@ -11,3 +11,4 @@ dependencies:
       - jupyter
       - notebook
       - jupytext
+      - git+https://github.com/adrn/solaroid
