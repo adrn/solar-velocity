@@ -1,0 +1,5 @@
+# User configuration; see the docs for details!
+verbose: true
+
+ms:
+    src/solar-velocity2022.tex
