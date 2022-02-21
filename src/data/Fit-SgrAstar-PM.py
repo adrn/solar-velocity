@@ -55,9 +55,8 @@ diff_sep = fiducial_c.separation(coord.Galactocentric().galcen_coord)
 
 # ---
 
-this_path = pathlib.Path(__file__).parent
-static_path = (this_path / '../static/').resolve()
-data_path = (this_path / '../data/').resolve()
+data_path = pathlib.Path(__file__).parent
+static_path = (data_path / '../static/').resolve()
 
 data = {}
 for filename in static_path.glob('J*'):

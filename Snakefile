@@ -21,3 +21,12 @@ rule sgrA_star:
         "src/data/Reid2020_jointEast.netcdf"
     shell:
         "python {input[0]}"
+
+rule sgrA_star_combine:
+    input:
+        "src/data/Combine-Reid-GRAVITY-SgrA.py",
+        "src/data/Reid2020_refit.ecsv"
+    output:
+        "src/data/sgrA_star.ecsv"
+    shell:
+        "python {input[0]}"

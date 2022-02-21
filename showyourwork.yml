@@ -3,3 +3,9 @@ verbose: true
 
 ms:
     src/solar-velocity2022.tex
+
+dependencies:
+    src/figures/SgrAstar-PM.py:
+        - src/data/Reid2020_refit.ecsv
+        - src/data/Reid2020_jointNorth.netcdf
+        - src/data/Reid2020_jointEast.netcdf
