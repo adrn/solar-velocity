@@ -3,7 +3,6 @@ channels:
 
 dependencies:
   - numpy>=1.20
-  - scipy>=1.8
   - pip>=20.3.3
   - python=3.9
   - pip:
@@ -11,4 +10,9 @@ dependencies:
       - jupyter
       - notebook
       - jupytext
-      - git+https://github.com/adrn/solaroid
+      - -e ../../
+      - scipy>=1.7
+      - pymc3>=3.11
+      - pymc3_ext
+      - corner
+      - arviz
