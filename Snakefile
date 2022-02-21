@@ -19,6 +19,8 @@ rule sgrA_star:
         "src/data/Reid2020_refit.ecsv",
         "src/data/Reid2020_jointNorth.netcdf",
         "src/data/Reid2020_jointEast.netcdf"
+    conda:
+        "environment.yml"
     shell:
         "python {input[0]}"
 
@@ -28,5 +30,7 @@ rule sgrA_star_combine:
         "src/data/Reid2020_refit.ecsv"
     output:
         "src/data/sgrA_star.ecsv"
+    conda:
+        "environment.yml"
     shell:
         "python {input[0]}"
