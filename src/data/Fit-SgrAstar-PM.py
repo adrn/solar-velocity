@@ -269,6 +269,7 @@ results = {
 results = at.QTable([results])
 results.write(data_path / 'Reid2020_refit.ecsv',
               overwrite=True)
-results
 
-
+for name in ['jointNorth', 'jointEast']:
+    samples = all_samples[name]
+    samples.to_netcdf(data_path / f'Reid2020_{name}.netcdf')
