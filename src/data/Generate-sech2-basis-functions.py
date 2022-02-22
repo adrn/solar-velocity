@@ -14,6 +14,7 @@
 # ---
 
 # +
+import os
 import pathlib
 import pickle
 import yaml
@@ -24,14 +25,20 @@ from scipy.integrate import quad
 
 from solaroid.likelihood import ln_two_sech2
 from solaroid.gram_schmidt import gram_schmidt
-# -
 
-this_path = pathlib.Path(__file__).parent
+# +
+try:
+    this_path = pathlib.Path(__file__).parent
+except NameError:
+    this_path = pathlib.Path(os.getcwd())
+
 _path = (this_path / '../static').resolve()
 with open(_path / 'fiducial-density.yml', 'r') as f:
     pars = yaml.safe_load(f.read())
 print(f"Fiducial parameters: {pars}")
 
+
+# -
 
 def inner_product(f1, f2, measure_func, scale):
     return quad(lambda z: f1(z) * f2(z) * measure_func(scale * z) * scale,
@@ -39,7 +46,7 @@ def inner_product(f1, f2, measure_func, scale):
 
 
 # +
-MAXORDER = 15
+MAXORDER = 25
 funcs = [np.polynomial.Polynomial.basis(deg) for deg in range(MAXORDER)]
 
 
@@ -57,7 +64,6 @@ for func in sech2_basis_funcs:
 
 with open(this_path / "basis-funcs.pkl", "wb") as f:
     pickle.dump(sech2_basis_funcs, f)
-
 # -
 
 plot_grid = np.linspace(-10, 10, 1024)
@@ -73,8 +79,7 @@ fig.tight_layout()
 fig.savefig(this_path / 'basis-funcs.pdf')
 
 fig, ax = plt.subplots()
-
-for func in sech2_basis_funcs[:8]:
+for func in sech2_basis_funcs:
     ax.plot(
         plot_grid * scale,
         func(plot_grid) * measure_func(plot_grid * pars['h2']),
@@ -84,3 +89,54 @@ ax.set_xlim(-3, 3)
 ax.set_xlabel('$z$ [kpc]')
 fig.tight_layout()
 fig.savefig(this_path / 'basis-funcs-measure.pdf')
+
+# +
+fig, ax = plt.subplots(figsize=(6, 10))
+
+past_max = 0
+past_offset = 0
+fudge = 0
+for i, func in enumerate(sech2_basis_funcs):
+    func_vals = func(plot_grid) * measure_func(plot_grid * pars['h2'])
+    if i > 0:
+        offset = past_max + fudge + np.abs(min(func_vals)) + past_offset
+        plot_vals = func_vals + offset
+    else:
+        plot_vals = func_vals
+        offset = 0
+        fudge = 0.1 * max(func_vals)
+
+    ax.plot(
+        plot_grid * scale,
+        plot_vals,
+        marker=''
+    )
+    ax.plot(
+        func.roots() * pars['h2'] / 1e3,
+        offset * np.ones_like(func.roots()),
+        marker='o',
+        ls='none'
+    )
+    past_max = max(func_vals)
+    past_offset = offset
+
+ax.set_xlim(-3, 3)
+ax.set_xlabel('$z$ [kpc]')
+fig.tight_layout()
+
+# +
+rng = np.random.default_rng(seed=42)
+
+vals = 0
+for coeff, func in zip(rng.uniform(size=16), sech2_basis_funcs):
+    vals = vals + coeff * func(plot_grid) * measure_func(plot_grid * pars['h2'])
+
+fig, ax = plt.subplots()
+ax.plot(
+    plot_grid * scale,
+    vals,
+    marker=''
+)
+ax.set_xlim(-3, 3)
+ax.set_xlabel('$z$ [kpc]')
+fig.tight_layout()
