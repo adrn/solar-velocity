@@ -10,7 +10,7 @@ def get_M(sgrA_star, zsun, roll):
     lat_mat = rotation_matrix(-sgrA_star.lat, 'y')
     lon_mat = rotation_matrix(sgrA_star.lon, 'z')
     roll_mat = rotation_matrix(roll, 'x')
-    
+
     # construct transformation matrix and use it
     R = matrix_product(roll_mat, lat_mat, lon_mat)
 
@@ -29,21 +29,23 @@ def get_M(sgrA_star, zsun, roll):
 def gal_to_schmagal(xyz, sgrA_star, zsun, roll):
     """
     Transform from Galactic to Schmagalactic cartesian coordinates.
-    
+
     Galactic = the usual
-    Schmagalactic = aligned with local Galactic disk, z at midplane, x to Galactic center
+    Schmagalactic = aligned with local Galactic disk, z at midplane, x to
+    Galactic center
     """
     M = get_M(sgrA_star, zsun, roll)
     new_xyz = M @ xyz - ([0, 0, zsun.value] * zsun.unit)[:, None]
     return new_xyz
-    
+
 
 def schmagal_to_gal(xyz, sgrA_star, zsun, roll):
     """
     Transform from Schmagalactic to Galactic cartesian coordinates.
-    
+
     Galactic = the usual
-    Schmagalactic = aligned with local Galactic disk, z at midplane, x to Galactic center
+    Schmagalactic = aligned with local Galactic disk, z at midplane, x to
+    Galactic center
     """
     MT = get_M(sgrA_star, zsun, roll).T
     new_xyz = MT @ (xyz + ([0, 0, zsun.value] * zsun.unit)[:, None])

@@ -15,7 +15,10 @@ def _basic_log_simpson(log_y, start, stop, x, dx, axis):
 
     if x is None:  # Even-spaced Simpson's rule.
         # result = np.sum(y[slice0] + 4*y[slice1] + y[slice2], axis=axis)
-        result = logsumexp([log_y[slice0], np.log(4) + log_y[slice1], log_y[slice2]], axis=0)
+        result = logsumexp([log_y[slice0],
+                            np.log(4) + log_y[slice1],
+                            log_y[slice2]],
+                           axis=0)
         result = logsumexp(result, axis=axis)
 
         # result *= dx / 3.0
@@ -31,7 +34,7 @@ def _basic_log_simpson(log_y, start, stop, x, dx, axis):
         hsum = h0 + h1
         hprod = h0 * h1
         h0divh1 = h0 / h1
-        
+
         # tmp = hsum/6.0 * (y[slice0] * (2 - 1.0/h0divh1) +
         #                   y[slice1] * (hsum * hsum / hprod) +
         #                   y[slice2] * (2 - h0divh1))
@@ -79,7 +82,11 @@ def log_simpson(log_y, x=None, dx=1.0, axis=-1, even='avg'):
             slice2 = tupleset(slice2, axis, -2)
             if x is not None:
                 last_dx = x[slice1] - x[slice2]
-            val = np.logaddexp(val, np.log(0.5*last_dx) + np.logaddexp(log_y[slice1], log_y[slice2]))
+            val = np.logaddexp(
+                val,
+                np.log(0.5*last_dx)
+                + np.logaddexp(log_y[slice1], log_y[slice2])
+            )
             result = _basic_log_simpson(log_y, 0, N-3, x, dx, axis)
         # Compute using Simpson's rule on last set of intervals
         if even in ['avg', 'last']:
@@ -87,16 +94,23 @@ def log_simpson(log_y, x=None, dx=1.0, axis=-1, even='avg'):
             slice2 = tupleset(slice2, axis, 1)
             if x is not None:
                 first_dx = x[tuple(slice2)] - x[tuple(slice1)]
-            val = np.logaddexp(val, np.log(0.5*first_dx) + np.logaddexp(log_y[slice2], log_y[slice1]))
-            result = np.logaddexp(result, _basic_log_simpson(log_y, 1, N-2, x, dx, axis))
+            val = np.logaddexp(
+                val,
+                np.log(0.5*first_dx)
+                + np.logaddexp(log_y[slice2], log_y[slice1])
+            )
+            result = np.logaddexp(
+                result,
+                _basic_log_simpson(log_y, 1, N-2, x, dx, axis)
+            )
         if even == 'avg':
             val -= np.log(2.0)
             result -= np.log(2.0)
         result = np.logaddexp(result, val)
     else:
         result = _basic_log_simpson(log_y, 0, N-2, x, dx, axis)
-        
+
     if returnshape:
         x = x.reshape(saveshape)
-        
+
     return result

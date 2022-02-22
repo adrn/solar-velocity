@@ -33,21 +33,20 @@ def gram_schmidt(objs, inner_product_func, args=()):
     Parameters
     ----------
     objs : iterable of callables, arrays
-        This can be a list of functions or a list of vectors that you
-        would like to turn into an orthonormal basis.
+        This can be a list of functions or a list of vectors that you would like
+        to turn into an orthonormal basis.
     inner_product_func : callable
-        This callable must take at minimum two arguments (two objects
-        from the ``objs`` list) and return a scalar. If the input objs
-        are vectors, this function could be as simple as `numpy.dot`.
-        If the input objects are functions, this would be a way of
-        evaluating the inner product integral of two functions from the
-        ``objs`` list. In that case, the inner product function might
-        take a third argument that specifies the measure function used
-        to define the inner product, and some information about how to
+        This callable must take at minimum two arguments (two objects from the
+        ``objs`` list) and return a scalar. If the input objs are vectors, this
+        function could be as simple as `numpy.dot`. If the input objects are
+        functions, this would be a way of evaluating the inner product integral
+        of two functions from the ``objs`` list. In that case, the inner product
+        function might take a third argument that specifies the measure function
+        used to define the inner product, and some information about how to
         compute the numerical integral.
     args : iterable
-        Passed in to ``inner_product_func`` after two objects from the
-        ``objs`` list.
+        Passed in to ``inner_product_func`` after two objects from the ``objs``
+        list.
 
     Returns
     -------
