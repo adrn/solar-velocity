@@ -1,6 +1,6 @@
 import astropy.units as u
 import numpy as np
-from .coordinates import gal_to_schmagal, schmagal_to_gal
+from .coordinates import gal_to_schmagal
 from .integrate import log_simpson
 
 
@@ -16,6 +16,7 @@ def ln_two_sech2(z, h1, h2, f):
     lnterm1 = np.log(f) - 2 * np.log(np.cosh(z / (2 * h1))) - np.log(4 * h1)
     lnterm2 = np.log(1 - f) - 2 * np.log(np.cosh(z / (2 * h2))) - np.log(4 * h2)
     return np.logaddexp(lnterm1, lnterm2)
+
 
 def ln_exp(x, x0, h):
     return - (x-x0) / h - np.log(h)
@@ -51,7 +52,8 @@ def ln_integrand(l, b, d, ln_density_args, gal_args):
     )
 
 
-def get_ln_Veff(ln_density_args, gal_args, min_abs_b, max_dist, n_simpson_grid=21):
+def get_ln_Veff(ln_density_args, gal_args, min_abs_b, max_dist,
+                n_simpson_grid=21):
     ranges1 = [
         (0, 2*np.pi),
         (-np.pi/2, -min_abs_b.to_value(u.rad)),
@@ -70,7 +72,13 @@ def get_ln_Veff(ln_density_args, gal_args, min_abs_b, max_dist, n_simpson_grid=2
         F = ln_integrand(*grids, ln_density_args, gal_args)
 
         xx, yy, zz = grids_1d
-        log_Veff = log_simpson(log_simpson([log_simpson(ff, zz) for ff in F], yy), xx)
+        log_Veff = log_simpson(
+            log_simpson(
+                [log_simpson(ff, zz) for ff in F],
+                yy
+            ),
+            xx
+        )
         log_Veffs.append(log_Veff)
 
     log_Veff = np.logaddexp(*log_Veffs)
@@ -78,7 +86,8 @@ def get_ln_Veff(ln_density_args, gal_args, min_abs_b, max_dist, n_simpson_grid=2
     return log_Veff
 
 
-def ln_likelihood(p, xyz, sgrA_star, ln_density_args, min_abs_b, max_dist, plot=False):
+def ln_likelihood(p, xyz, sgrA_star, ln_density_args, min_abs_b, max_dist,
+                  plot=False):
     lnn0, lnh1, lnh2, f, zsun, roll = p
 
     gal_args = (sgrA_star, zsun * u.pc, roll * u.rad)
@@ -89,15 +98,15 @@ def ln_likelihood(p, xyz, sgrA_star, ln_density_args, min_abs_b, max_dist, plot=
     if plot:
         import matplotlib.pyplot as plt
         grid = np.linspace(-5000, 5000, 128)
-        plt.hist(rot_xyz[2], bins=grid, density=True);
+        plt.hist(rot_xyz[2], bins=grid, density=True)
 
         val = np.exp(ln_two_sech2(grid, *z_args))
         plt.plot(grid, val, marker='')
         plt.yscale('log')
 
     args = (
-        ln_density_args[0], ln_density_args[1], # TODO: could swap out for params?
-        ln_density_args[2], ln_density_args[3], # TODO: could swap out for params?
+        ln_density_args[0], ln_density_args[1],
+        ln_density_args[2], ln_density_args[3],
         ln_density_args[4], z_args
     )
     ln_Veff = get_ln_Veff(args, gal_args, min_abs_b, max_dist)
