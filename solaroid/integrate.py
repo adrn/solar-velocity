@@ -48,6 +48,10 @@ def _basic_log_simpson(log_y, start, stop, x, dx, axis):
 
 
 def log_simpson(log_y, x=None, dx=1.0, axis=-1, even='avg'):
+    """
+    An implementation of Simpson's rule that takes log-integrand values and
+    returns the (natural) log of the integral.
+    """
     log_y = np.asarray(log_y)
     nd = len(log_y.shape)
     N = log_y.shape[axis]
