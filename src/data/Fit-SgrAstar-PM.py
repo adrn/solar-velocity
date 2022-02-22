@@ -42,7 +42,10 @@ fiducial_c = coord.SkyCoord(
     unit=(u.hourangle, u.degree)
 )
 
-# The galactic center coordinate in Galactocentric is taken from the Appendix of Reid & Brunthaler 2004. That is from the definition of the origin in Galactic coordinates, propagated to J2000/ICRS frame. In the future, we should use the location of Sgr A* at an epoch. Here we adopt 2016 as the epoch (Gaia DR3).
+# The galactic center coordinate in Galactocentric is taken from the Appendix of
+# Reid & Brunthaler 2004. That is from the definition of the origin in Galactic
+# coordinates, propagated to J2000/ICRS frame. In the future, we should use the
+# location of Sgr A* at an epoch. Here we adopt 2016 as the epoch (Gaia DR3).
 
 (fiducial_c.ra.degree,
  fiducial_c.dec.degree)
