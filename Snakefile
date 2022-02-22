@@ -34,3 +34,13 @@ rule sgrA_star_combine:
         "environment.yml"
     shell:
         "python {input[0]}"
+
+rule basis_funcs:
+    input:
+        "src/data/Generate-sech2-basis-functions.py"
+    output:
+        "src/data/basis-funcs.pkl"
+    conda:
+        "environment.yml"
+    shell:
+        "python {input[0]}"
