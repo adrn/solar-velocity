@@ -108,6 +108,16 @@ EPOCH = 2000.
 
 
 def make_model(t_jyear, dx, dx_err):
+    """
+    Parameters
+    ----------
+    t_jyear : array_like
+        In units of Julian years.
+    dx : array_like
+        In units of mas.
+    dx_err : array_like
+        In units of mas.
+    """
     with pm.Model() as model:
         acc = pm.Uniform('acc', -10, 10)  # acceleration in mas/yr**2
         pm_ = pm.Uniform('pm', -10, 10)  # proper motion in mas/yr
@@ -122,6 +132,16 @@ def make_model(t_jyear, dx, dx_err):
 
 
 def make_joint_model(t_jyear, dx, dx_err, ids):
+    """
+    Parameters
+    ----------
+    t_jyear : array_like
+        In units of Julian years.
+    dx : array_like
+        In units of mas.
+    dx_err : array_like
+        In units of mas.
+    """
     with pm.Model() as model:
         acc = pm.Uniform('acc', -10, 10)  # acceleration in mas/yr**2
         pm_ = pm.Uniform('pm', -10, 10)  # proper motion in mas/yr
