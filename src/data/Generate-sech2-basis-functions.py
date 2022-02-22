@@ -41,11 +41,6 @@ def inner_product(f1, f2, measure_func, scale):
 # +
 MAXORDER = 15
 funcs = [np.polynomial.Polynomial.basis(deg) for deg in range(MAXORDER)]
-for func in funcs:
-    print(func)
-
-with open(this_path / "basis-funcs.pkl", "wb") as f:
-    pickle.dump(funcs, f)
 
 
 def measure_func(z):
@@ -56,6 +51,13 @@ grid = np.arctanh(np.linspace(-1+1e-8, 1-1e-8, 8192))
 
 sech2_basis_funcs = gram_schmidt(funcs, inner_product,
                                  args=(measure_func, pars['h2']))
+
+for func in sech2_basis_funcs:
+    print(func)
+
+with open(this_path / "basis-funcs.pkl", "wb") as f:
+    pickle.dump(sech2_basis_funcs, f)
+
 # -
 
 plot_grid = np.linspace(-10, 10, 1024)
