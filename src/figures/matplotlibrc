@@ -1,0 +1,45 @@
+font.family: serif
+
+# styles
+lines.linestyle        : -
+lines.marker           : o
+lines.markeredgewidth  : 0
+lines.markersize       : 5
+patch.edgecolor        : none
+
+# figure and axes
+figure.figsize: 6, 6
+figure.facecolor: w
+figure.edgecolor: ffffff
+figure.dpi: 256
+axes.facecolor: ffffff
+axes.formatter.limits: -7, 10  # scientific notation limits
+axes.titlesize: 26
+axes.labelsize: 22
+xtick.labelsize: 18
+ytick.labelsize: 18
+
+# ticks
+xtick.major.width: 1.
+ytick.major.width: 1.
+xtick.color: 444444
+ytick.color: 444444
+xtick.direction: in
+ytick.direction: in
+xtick.major.size: 8      # major tick size in points
+xtick.minor.size: 4      # minor tick size in points
+ytick.major.size: 8      # major tick size in points
+ytick.minor.size: 4      # minor tick size in points
+
+xtick.top: True
+ytick.right: True
+
+# the grid
+grid.color: cccccc   # grid color
+grid.linestyle: -
+grid.linewidth: 0.75     # in points
+
+# color
+axes.prop_cycle: cycler(color=['k', 'tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan'])
+
+image.cmap: magma
