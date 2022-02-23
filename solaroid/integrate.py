@@ -15,11 +15,19 @@ def _basic_log_simpson(log_y, start, stop, x, dx, axis):
 
     if x is None:  # Even-spaced Simpson's rule.
         # result = np.sum(y[slice0] + 4*y[slice1] + y[slice2], axis=axis)
-        result = logsumexp([log_y[slice0],
-                            np.log(4) + log_y[slice1],
-                            log_y[slice2]],
-                           axis=0)
-        result = logsumexp(result, axis=axis)
+        vals = []
+        if log_y[slice0].size:
+            vals.append(log_y[slice0])
+        if log_y[slice1].size:
+            vals.append(np.log(4) + log_y[slice1])
+        if log_y[slice2].size:
+            vals.append(log_y[slice2])
+        result = np.array(-np.inf)
+        if len(vals):
+            result = logsumexp(vals, axis=0)
+
+        if result.size:
+            result = logsumexp(result, axis=axis)
 
         # result *= dx / 3.0
         result += np.log(dx) - np.log(3)
