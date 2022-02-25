@@ -9,9 +9,9 @@ def ln_uniform(x, a, b):
     return -np.log(b - a)
 
 
-def ln_two_sech2(z, h1, h2, f):
-    lnterm1 = np.log(f) - 2 * np.log(np.cosh(z / (2 * h1))) - np.log(4 * h1)
-    lnterm2 = np.log(1 - f) - 2 * np.log(np.cosh(z / (2 * h2))) - np.log(4 * h2)
+def ln_two_sech2(x, h1, h2, f):
+    lnterm1 = np.log(f) - 2 * np.log(np.cosh(x / (2 * h1))) - np.log(4 * h1)
+    lnterm2 = np.log(1 - f) - 2 * np.log(np.cosh(x / (2 * h2))) - np.log(4 * h2)
     return np.logaddexp(lnterm1, lnterm2)
 
 
