@@ -35,7 +35,8 @@ def gal_to_schmagal(xyz, sgrA_star, zsun, roll):
     Galactic center
     """
     M = get_M(sgrA_star, zsun, roll)
-    new_xyz = M @ xyz - ([0, 0, zsun.value] * zsun.unit)[:, None]
+    xsun = sgrA_star.distance.to_value(zsun.unit)
+    new_xyz = M @ xyz - ([xsun, 0, zsun.value] * zsun.unit)[:, None]
     return new_xyz
 
 
@@ -48,5 +49,6 @@ def schmagal_to_gal(xyz, sgrA_star, zsun, roll):
     Galactic center
     """
     MT = get_M(sgrA_star, zsun, roll).T
-    new_xyz = MT @ (xyz + ([0, 0, zsun.value] * zsun.unit)[:, None])
+    xsun = sgrA_star.distance.to_value(zsun.unit)
+    new_xyz = MT @ (xyz + ([xsun, 0, zsun.value] * zsun.unit)[:, None])
     return new_xyz
