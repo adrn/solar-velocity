@@ -4,54 +4,59 @@ import abc
 # Third-party
 import numpy as np
 
+# This package
+from .stats import ln_two_sech2, ln_uniform, ln_exp
 
-class DensityModel:
 
-    def __init__(self, ln_amp):
-        self.ln_amp = ln_amp
+class DensityModel(abc.ABC):
+
+    def __init_subclass__(cls, **kwargs):
+        if not hasattr(cls, 'par_names'):
+            cls.par_names = ()
+
+    def __init__(self, **kwargs):
+        for key, val in kwargs.items():
+            if key in self.par_names:
+                setattr(self, key, val)
+            else:
+                raise ValueError(f"Unrecognized parameter: {key}")
 
     @abc.abstractmethod
     def ln_density(self, xyz):
         pass
 
 
-class CartesianDensityModel(DensityModel):
-
-    def __init__(
-        self,
-        ln_amp,
-        x_func, y_func, z_func,
-        x_args=(), y_args=(), z_args=()
-    ):
-        super().__init__(ln_amp)
-        self.x_func = lambda x: x_func(x, *x_args)
-        self.y_func = lambda x: y_func(x, *y_args)
-        self.z_func = lambda x: z_func(x, *z_args)
+class UniformSech2DensityModel(DensityModel):
+    par_names = (
+        'h1',
+        'h2',
+        'f',
+        'x_a',
+        'x_b',
+        'y_a',
+        'y_b'
+    )
 
     def ln_density(self, xyz):
         return (
-            self.ln_amp +
-            self.x_func(xyz[0]) +
-            self.y_func(xyz[1]) +
-            self.z_func(xyz[2])
+            ln_uniform(xyz[0], self.x_a, self.x_b) +
+            ln_uniform(xyz[1], self.y_a, self.y_b) +
+            ln_two_sech2(xyz[2], self.h1, self.h2, self.f)
         )
 
 
-class DiskDensityModel(DensityModel):
-
-    def __init__(
-        self,
-        ln_amp,
-        R_func, z_func,
-        R_args=(), z_args=()
-    ):
-        super().__init__(ln_amp)
-        self.R_func = lambda x: R_func(x, *R_args)
-        self.z_func = lambda x: z_func(x, *z_args)
+class ExpSech2DensityModel(DensityModel):
+    par_names = (
+        'h1',
+        'h2',
+        'f',
+        'R0',
+        'h_R'
+    )
 
     def ln_density(self, xyz):
+        R = np.sqrt(xyz[0]**2 + xyz[1]**2)
         return (
-            self.ln_amp +
-            self.R_func(np.sqrt(xyz[0]**2 + xyz[1]**2)) +
-            self.z_func(xyz[2])
+            ln_exp(R, self.R0, self.h_R) +
+            ln_two_sech2(xyz[2], self.h1, self.h2, self.f)
         )

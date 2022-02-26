@@ -4,13 +4,13 @@ import numpy as np
 
 from .coordinates import gal_to_schmagal
 from .integrate import log_simpson
-from .stats import ln_two_sech2, ln_uniform
-from .density import CartesianDensityModel
 
 
 class Model:
 
-    def __init__(self, data_gal_xyz, sgrA_star, min_abs_b, max_dist, usys):
+    def __init__(self, data_gal_xyz, DensityModel,
+                 sgrA_star, min_abs_b, max_dist, usys,
+                 frozen=None):
         self.usys = UnitSystem(usys)
 
         self.min_abs_b = min_abs_b
@@ -22,14 +22,17 @@ class Model:
         self.data_gal_xyz = data_gal_xyz
         self.sgrA_star = sgrA_star
 
-        self.par_names = [
+        self.DensityModel = DensityModel
+
+        self.par_names = (
             'ln_n0',
-            'ln_h1',
-            'ln_h2',
-            'f',
             'zsun',
             'roll'
-        ]
+        ) + self.DensityModel.par_names
+
+        if frozen is None:
+            frozen = {}
+        self.frozen = dict(frozen)
 
     def ln_integrand(self, l, b, d, density_model, gal_args):
         l, b, d = map(np.array, [l, b, d])
@@ -81,21 +84,42 @@ class Model:
         return log_Veff
 
     def unpack_pars(self, p_arr):
-        p_dict = {}
-        for i, name in enumerate(self.par_names):
-            p_dict[name] = p_arr[i]
+        p_dict = self.frozen.copy()
+
+        i = 0
+        for name in self.par_names:
+            if name not in self.frozen:
+                p_dict[name] = p_arr[i]
+                i += 1
+
         return p_dict
 
     def pack_pars(self, p_dict):
-        return np.array([p_dict[name] for name in self.par_names])
+        p = []
+        for name in self.par_names:
+            if name not in self.frozen:
+                val = p_dict[name]
+                if hasattr(val, 'unit'):
+                    val = val.decompose(self.usys).value
+                p.append(val)
+        return np.array(p)
 
-    def _get_density_model(self, z_func, z_args):
-        density_model = CartesianDensityModel(
-            ln_amp=0,
-            x_func=ln_uniform, x_args=(-self._max_dist, self._max_dist),
-            y_func=ln_uniform, y_args=(-self._max_dist, self._max_dist),
-            z_func=z_func, z_args=z_args
-        )
+    def _get_density_model(self, p_dict, fill_frozen=True):
+        p_dict = p_dict.copy()
+
+        if fill_frozen:
+            p_dict.update(self.frozen)
+
+        for k, v in p_dict.items():
+            if hasattr(p_dict[k], 'unit'):
+                p_dict[k] = v.decompose(self.usys).value
+
+        kw = {
+            k: v for k, v in p_dict.items()
+            if k in self.DensityModel.par_names
+        }
+
+        density_model = self.DensityModel(**kw)
         return density_model
 
     def ln_likelihood(self, p, plot=False):
@@ -109,19 +133,18 @@ class Model:
         rot_xyz = gal_to_schmagal(self.data_gal_xyz, *gal_args)
         rot_xyz = rot_xyz.to_value(self.usys['length'])
 
-        z_args = (
-            np.exp(pars['ln_h1']),
-            np.exp(pars['ln_h2']),
-            pars['f']
-        )
-        density_model = self._get_density_model(ln_two_sech2, z_args)
+        density_model = self._get_density_model(pars)
 
         if plot:
+            from .stats import ln_two_sech2
             import matplotlib.pyplot as plt
             grid = np.linspace(-5000, 5000, 128)
             plt.hist(rot_xyz[2], bins=grid, density=True)
 
-            val = np.exp(ln_two_sech2(grid, *z_args))
+            val = np.exp(ln_two_sech2(grid,
+                                      h1=pars['h1'],
+                                      h2=pars['h2'],
+                                      f=pars['f']))
             plt.plot(grid, val, marker='')
             plt.yscale('log')
 
