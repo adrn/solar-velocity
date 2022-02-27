@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import quad
 
-from solaroid.likelihood import ln_two_sech2
+from solaroid.stats import ln_two_sech2
 from solaroid.gram_schmidt import gram_schmidt
 
 # +

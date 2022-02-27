@@ -16,3 +16,4 @@ dependencies:
       - pymc3_ext
       - corner
       - arviz
+      - git+https://github.com/adrn/gala
