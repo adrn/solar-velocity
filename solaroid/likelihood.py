@@ -10,7 +10,8 @@ class Model:
 
     def __init__(self, data_gal_xyz, DensityModel,
                  sgrA_star, min_abs_b, max_dist, usys,
-                 frozen=None):
+                 DensityModel_kwargs=None, frozen=None,
+                 density_test_grid_xyz=None):
         self.usys = UnitSystem(usys)
 
         self.min_abs_b = min_abs_b
@@ -23,6 +24,9 @@ class Model:
         self.sgrA_star = sgrA_star
 
         self.DensityModel = DensityModel
+        if DensityModel_kwargs is None:
+            DensityModel_kwargs = {}
+        self.DensityModel_kwargs = DensityModel_kwargs
 
         self.par_names = (
             'ln_n0',
@@ -33,6 +37,9 @@ class Model:
         if frozen is None:
             frozen = {}
         self.frozen = dict(frozen)
+
+        # To assert non-negative density over a domain
+        self.density_test_grid_xyz = density_test_grid_xyz
 
     def ln_integrand(self, l, b, d, density_model, gal_args):
         l, b, d = map(np.array, [l, b, d])
@@ -118,6 +125,7 @@ class Model:
             k: v for k, v in p_dict.items()
             if k in self.DensityModel.par_names
         }
+        kw.update(self.DensityModel_kwargs)
 
         density_model = self.DensityModel(**kw)
         return density_model
@@ -147,6 +155,11 @@ class Model:
                                       f=pars['f']))
             plt.plot(grid, val, marker='')
             plt.yscale('log')
+
+        if self.density_test_grid_xyz is not None:
+            vals = density_model.ln_density(self.density_test_grid_xyz)
+            if not np.isfinite(vals).all():
+                return -np.inf
 
         ln_Veff = self.get_ln_Veff(density_model, gal_args)
 
