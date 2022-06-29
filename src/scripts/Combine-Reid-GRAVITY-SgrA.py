@@ -13,11 +13,11 @@
 #     name: conda-root-py
 # ---
 
-import pathlib
 import astropy.table as at
 import astropy.units as u
 # %matplotlib inline
 import numpy as np
+import paths
 
 # See: Tables 2 and 3
 # https://www.aanda.org/articles/aa/pdf/2021/03/aa40208-20.pdf
@@ -30,8 +30,7 @@ gravity = {
 }
 gravity_tbl = at.QTable([gravity])
 
-this_path = pathlib.Path(__file__).parent
-reid_tbl = at.QTable.read(this_path / 'Reid2020_refit.ecsv')
+reid_tbl = at.QTable.read(paths.data / 'Reid2020_refit.ecsv')
 
 sgrA = at.hstack((reid_tbl, gravity_tbl))
-sgrA.write(this_path / 'sgrA_star.ecsv', overwrite=True)
+sgrA.write(paths.data / 'sgrA_star.ecsv', overwrite=True)

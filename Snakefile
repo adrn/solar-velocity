@@ -1,20 +1,6 @@
-# User config
-configfile: "showyourwork.yml"
-
-
-# Import the showyourwork module
-module showyourwork:
-    snakefile:
-        "showyourwork/workflow/Snakefile"
-    config:
-        config
-
-# Use all default rules
-use rule * from showyourwork
-
 rule sgrA_star:
     input:
-        "src/data/Fit-SgrAstar-PM.py"
+        "src/scripts/Fit-SgrAstar-PM.py"
     output:
         "src/data/Reid2020_refit.ecsv",
         "src/data/Reid2020_jointNorth.netcdf",
@@ -26,7 +12,7 @@ rule sgrA_star:
 
 rule sgrA_star_combine:
     input:
-        "src/data/Combine-Reid-GRAVITY-SgrA.py",
+        "src/scripts/Combine-Reid-GRAVITY-SgrA.py",
         "src/data/Reid2020_refit.ecsv"
     output:
         "src/data/sgrA_star.ecsv"
@@ -37,7 +23,7 @@ rule sgrA_star_combine:
 
 rule basis_funcs:
     input:
-        "src/data/Generate-sech2-basis-functions.py"
+        "src/scripts/Generate-sech2-basis-functions.py"
     output:
         "src/data/basis-funcs.pkl"
     conda:

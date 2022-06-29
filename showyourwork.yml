@@ -1,11 +1,10 @@
 # User configuration; see the docs for details!
 verbose: true
 
-ms:
-    src/solar-velocity2022.tex
+ms_name: solar-velocity2022
 
 dependencies:
-    src/figures/SgrAstar-PM.py:
+    src/scripts/SgrAstar-PM.py:
         - src/data/Reid2020_refit.ecsv
         - src/data/Reid2020_jointNorth.netcdf
         - src/data/Reid2020_jointEast.netcdf

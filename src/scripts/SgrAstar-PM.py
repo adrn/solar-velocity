@@ -4,10 +4,10 @@ import astropy.table as at
 import astropy.units as u
 import corner
 import numpy as np
-
+import paths
 
 # this_path = pathlib.Path(__file__).parent
-data_path = pathlib.Path('../data/').resolve()
+data_path = paths.data
 
 samples = {}
 for name in ['jointNorth', 'jointEast']:
@@ -45,7 +45,7 @@ fig = corner.corner(
     label_kwargs=dict(fontsize=16),
     labelpad=0.1
 )
-fig.suptitle("Sgr A* astrometry (fit to data from Reid & Brunthaler 2020)", 
+fig.suptitle("Sgr A* astrometry (fit to data from Reid & Brunthaler 2020)",
              fontsize=18, y=0.99)
 fig.subplots_adjust(bottom=0.12, left=0.12)
 fig.savefig('SgrAstar-PM.pdf')

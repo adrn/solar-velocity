@@ -6,7 +6,6 @@ dependencies:
   - pip>=20.3.3
   - python=3.9
   - pip:
-      - git+https://github.com/adrn/solar-velocity
       - matplotlib>=3.3.3
       - jupyter
       - notebook
@@ -17,3 +16,4 @@ dependencies:
       - corner
       - arviz
       - git+https://github.com/adrn/gala
+      - .

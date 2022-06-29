@@ -31,6 +31,7 @@ import theano.tensor as tt
 import pymc3 as pm
 import pymc3_ext as pmx
 import corner
+import paths
 # -
 
 rng = np.random.default_rng(seed=42)
@@ -58,7 +59,7 @@ diff_sep = fiducial_c.separation(coord.Galactocentric().galcen_coord)
 
 # ---
 
-data_path = pathlib.Path(__file__).parent
+data_path = paths.data
 static_path = (data_path / '../static/').resolve()
 
 data = {}

@@ -25,14 +25,11 @@ from scipy.integrate import quad
 
 from solaroid.stats import ln_two_sech2
 from solaroid.gram_schmidt import gram_schmidt
+import paths
 
 # +
-try:
-    this_path = pathlib.Path(__file__).parent
-except NameError:
-    this_path = pathlib.Path(os.getcwd())
 
-_path = (this_path / '../static').resolve()
+_path = paths.static
 with open(_path / 'fiducial-density.yml', 'r') as f:
     pars = yaml.safe_load(f.read())
 print(f"Fiducial parameters: {pars}")
@@ -62,7 +59,7 @@ sech2_basis_funcs = gram_schmidt(funcs, inner_product,
 for func in sech2_basis_funcs:
     print(func)
 
-with open(this_path / "basis-funcs.pkl", "wb") as f:
+with open(paths.data / "basis-funcs.pkl", "wb") as f:
     pickle.dump(sech2_basis_funcs, f)
 # -
 
@@ -76,7 +73,7 @@ ax.set_xlim(-4, 4)
 ax.set_ylim(-5, 5)
 ax.set_xlabel('$z$ [kpc]')
 fig.tight_layout()
-fig.savefig(this_path / 'basis-funcs.pdf')
+fig.savefig(paths.data / 'basis-funcs.pdf')
 
 fig, ax = plt.subplots()
 for func in sech2_basis_funcs:
@@ -88,7 +85,7 @@ for func in sech2_basis_funcs:
 ax.set_xlim(-3, 3)
 ax.set_xlabel('$z$ [kpc]')
 fig.tight_layout()
-fig.savefig(this_path / 'basis-funcs-measure.pdf')
+fig.savefig(paths.data / 'basis-funcs-measure.pdf')
 
 # +
 fig, ax = plt.subplots(figsize=(6, 10))
